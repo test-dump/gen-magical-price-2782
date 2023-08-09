@@ -1,0 +1,57 @@
+To properly simulate a Console application behavior and be able to test the output to the standard output, we could redirect the `Console.Out` to a `StringWriter`. Doing so, after invoking the `Main` method we would be able to validate the data that was written to the console output.
+
+For the sake of this testing, I'll be assuming that the `Main` method of the `Program` class would be placed in a file called `Program.cs` and the test cases will be written in a separate file named `ProgramTests.cs`.
+
+Program.cs
+```csharp
+using System;
+
+public class Program // This class encapsulates the entire console application
+{
+    public static void Main(string[] args) // This method is the main entry point of the application
+    {
+        System.Console.WriteLine("Hello World"); // This line of code prints "Hello World" to the console.
+    }
+}
+```
+
+ProgramTests.cs
+```csharp
+using System;
+using System.IO;
+using NUnit.Framework;
+
+[TestFixture]
+public class ProgramTests
+{
+    private StringWriter stringWriter;
+
+    [SetUp]
+    public void SetUp()
+    {
+        stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
+    }
+
+    [Test]
+    public void Main_PrintsHelloWorld()
+    {
+        // Arrange
+        string expected = "Hello World" + Environment.NewLine;
+
+        // Act
+        Program.Main(new string[] { });
+
+        // Assert
+        Assert.AreEqual(expected, stringWriter.GetStringBuilder().ToString());
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        stringWriter.Close();
+    }
+}
+```
+
+Here, we have a `SetUp` method that is run before each test to redirect the `Console.Out` to our `StringWriter` and a `TearDown` method to release the resources after each test. The `Main_PrintsHelloWorld` method is our test case which asserts, that after invoking the `Main` method, our `StringWriter` contains the expected output.

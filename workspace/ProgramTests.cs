@@ -1,35 +1,39 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using HelloWorld;
 
-[TestFixture]
-public class ProgramTests
+namespace HelloWorld.Tests
 {
-    private StringWriter stringWriter;
-
-    [SetUp]
-    public void SetUp()
+    [TestFixture]
+    public class ProgramTests
     {
-        stringWriter = new StringWriter();
-        Console.SetOut(stringWriter);
-    }
+        private StringWriter stringWriter;
 
-    [Test]
-    public void Main_PrintsHelloWorld()
-    {
-        // Arrange
-        string expected = "Hello World" + Environment.NewLine;
+        [SetUp]
+        public void SetUp()
+        {
+            stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+        }
 
-        // Act
-        Program.Main(new string[] { });
+        [Test]
+        public void Main_PrintsHelloWorld()
+        {
+            // Arrange
+            string expected = "Hello World" + Environment.NewLine;
 
-        // Assert
-        Assert.AreEqual(expected, stringWriter.GetStringBuilder().ToString());
-    }
+            // Act
+            Program.Main(new string[] { });
 
-    [TearDown]
-    public void TearDown()
-    {
-        stringWriter.Close();
+            // Assert
+            Assert.AreEqual(expected, stringWriter.GetStringBuilder().ToString());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            stringWriter.Close();
+        }
     }
 }
